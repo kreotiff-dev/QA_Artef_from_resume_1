@@ -1,0 +1,35 @@
+#Получили Имя и Фамилию заказов
+SELECT c.customer_id, c.last_name, c.first_name, o.order_id, o.order_date 
+FROM customers c
+INNER JOIN orders  o
+ON c.customer_id = o.customer_id 
+
+#Вывели название, жанр и цену тех книг, количество которых больше 8, в отсортированном по убыванию цены виде.
+SELECT title, name_genre, price
+FROM genre g
+JOIN book b
+ON g.genre_id = b.genre_id
+WHERE b.amount >= 8
+ORDER BY price DESC;
+
+#Вывели информацию о книгах(автор, название, цена), цена которых меньше самой большой из минимальных цен, вычисленных для каждого автора.
+SELECT author, title, price
+FROM book
+WHERE price < ANY ( 
+     SELECT MIN(price)
+    FROM book
+    GROUP BY author)
+	
+	
+#Посчитали стоимость всех экземпляров каждого автора без учета книг «Идиот» и «Белая гвардия». 
+#В результат включили только тех авторов, у которых суммарная стоимость книг (без учета книг «Идиот» и «Белая гвардия») более 5000 руб. 
+#Вычисляемый столбец назвали Стоимость. 
+#Результат отсортировали по убыванию стоимости.
+#SELECT author,
+ SUM(price*amount) AS Стоимость
+ FROM book
+ WHERE title <> 'Идиот' AND title <> 'Белая гвардия'
+ GROUP BY author
+ HAVING SUM(price*amount) > 5000 
+ ORDER BY Стоимость DESC
+ 
